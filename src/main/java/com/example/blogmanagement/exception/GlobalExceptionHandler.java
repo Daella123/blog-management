@@ -15,9 +15,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * Handle entity-not-found scenarios by returning a 404 response.
-     */
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException ex,
                                                           HttpServletRequest request) {
@@ -30,9 +28,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    /**
-     * Handle attempts to create duplicate resources by returning a 409 response.
-     */
+
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<ApiError> handleResourceAlreadyExists(ResourceAlreadyExistsException ex,
                                                                HttpServletRequest request) {
@@ -60,10 +56,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    /**
-     * Handle validation errors thrown by @Valid annotated endpoints. Collect
-     * all field errors into a map and return a 400 response with details.
-     */
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationErrors(MethodArgumentNotValidException ex,
                                                          HttpServletRequest request) {
@@ -80,10 +73,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    /**
-     * Catch-all handler for any unexpected exceptions. Returns a 500 response
-     * without leaking internal details.
-     */
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex,
                                                           HttpServletRequest request) {
@@ -95,11 +85,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
-    /**
-     * Inner class representing the structure of an error response. Contains
-     * metadata about the error as well as an optional map of field validation
-     * errors.
-     */
+
     public static class ApiError {
         private LocalDateTime timestamp;
         private int status;

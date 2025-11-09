@@ -11,11 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * REST controller responsible for handling user registration and retrieval. Users
- * are stored in PostgreSQL. Sensitive fields like passwords are not returned
- * in responses.
- */
+
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "Users", description = "Operations on user accounts")

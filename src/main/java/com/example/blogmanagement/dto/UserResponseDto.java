@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Data transfer object returned after user registration or retrieval.
- * Passwords are intentionally excluded to avoid leaking sensitive information.
- */
+
 @Data
 @Builder
 @NoArgsConstructor
