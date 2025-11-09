@@ -23,38 +23,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Comment {
 
-    /**
-     * Unique identifier for the comment. Assigned by MongoDB.
-     */
+
     @Id
     private String id;
 
-    /**
-     * Identifier of the post this comment belongs to. This should match the
-     * id of a Post document.
-     */
+
     private String postId;
 
-    /**
-     * Identifier of the user who wrote the comment. Corresponds to a user
-     * record stored in PostgreSQL.
-     */
+
     private Long authorId;
 
-    /**
-     * Text content of the comment.
-     */
+
     private String content;
 
-    /**
-     * Timestamp when the comment was created.
-     */
+
     @CreatedDate
     private LocalDateTime createdAt;
 
-    /**
-     * Timestamp when the comment was last updated.
-     */
+
     @LastModifiedDate
     private LocalDateTime updatedAt;
 }
