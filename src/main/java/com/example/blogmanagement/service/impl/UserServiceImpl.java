@@ -2,17 +2,23 @@ package com.example.blogmanagement.service.impl;
 
 import com.example.blogmanagement.dto.UserRegistrationRequest;
 import com.example.blogmanagement.dto.UserResponseDto;
+import com.example.blogmanagement.entity.Role;
 import com.example.blogmanagement.entity.User;
 import com.example.blogmanagement.exception.ResourceAlreadyExistsException;
 import com.example.blogmanagement.exception.ResourceNotFoundException;
 import com.example.blogmanagement.repository.UserRepository;
 import com.example.blogmanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Default implementation of the {@link UserService}. Handles user registration
+ * and retrieval using Spring Data JPA.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -32,10 +38,15 @@ public class UserServiceImpl implements UserService {
 
         // Map the request DTO to a User entity. Passwords are hashed using
         // BCrypt to avoid storing them in plaintext.
+        // Assign USER role by default
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.USER);
+        
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .roles(roles)
                 .build();
 
         User saved = userRepository.save(user);
@@ -59,5 +70,12 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .createdAt(user.getCreatedAt())
                 .build();
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        userRepository.delete(user);
     }
 }

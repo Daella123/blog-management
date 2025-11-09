@@ -9,7 +9,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Request DTO used when creating or updating a blog post. Validation annotations
+ * enforce the presence of required fields and limit the length of text inputs.
+ */
 @Data
 @Builder
 @NoArgsConstructor
