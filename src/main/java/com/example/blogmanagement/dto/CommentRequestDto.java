@@ -8,7 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Request DTO used when creating or updating a comment. Validation ensures that
+ * the necessary identifiers and text content are provided.
+ */
 @Data
 @Builder
 @NoArgsConstructor

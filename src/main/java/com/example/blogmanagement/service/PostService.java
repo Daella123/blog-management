@@ -4,9 +4,7 @@ import com.example.blogmanagement.dto.PagedResponse;
 import com.example.blogmanagement.dto.PostRequestDto;
 import com.example.blogmanagement.dto.PostResponseDto;
 
-/**
- * Service interface for managing blog posts stored in MongoDB.
- */
+
 public interface PostService {
 
 

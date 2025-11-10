@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
+/**
+ * Response DTO representing a blog post returned to the client. It includes
+ * metadata such as creation and update timestamps.
+ */
 @Data
 @Builder
 @NoArgsConstructor

@@ -1,11 +1,14 @@
 package com.example.blogmanagement.service.impl;
 
+import com.example.blogmanagement.document.Comment;
 import com.example.blogmanagement.dto.CommentRequestDto;
 import com.example.blogmanagement.dto.CommentResponseDto;
 import com.example.blogmanagement.dto.PagedResponse;
-import com.example.blogmanagement.document.Comment;
-import com.example.blogmanagement.exception.ResourceNotFoundException;
+import com.example.blogmanagement.entity.Role;
+import com.example.blogmanagement.entity.User;
 import com.example.blogmanagement.exception.BadRequestException;
+import com.example.blogmanagement.exception.ResourceNotFoundException;
+import com.example.blogmanagement.exception.UnauthorizedException;
 import com.example.blogmanagement.repository.CommentRepository;
 import com.example.blogmanagement.repository.PostRepository;
 import com.example.blogmanagement.repository.UserRepository;
@@ -15,12 +18,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * Default implementation of {@link CommentService}. Manages CRUD operations
+ * for comments, validating both the associated post and author exist.
+ */
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -58,6 +66,13 @@ public class CommentServiceImpl implements CommentService {
     public CommentResponseDto updateComment(String commentId, CommentRequestDto request) {
         Comment existing = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+        
+        // Check authorization - user must own the comment or be an admin
+        User currentUser = getCurrentUser();
+        if (!canModifyComment(currentUser, existing)) {
+            throw new UnauthorizedException("You are not authorized to update this comment");
+        }
+        
         // In a real‑world API a comment's post and author cannot be changed. If
         // different identifiers are supplied, reject the request to prevent
         // accidental reassignment.
@@ -76,6 +91,13 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(String commentId) {
         Comment existing = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+        
+        // Check authorization - user must own the comment or be an admin
+        User currentUser = getCurrentUser();
+        if (!canModifyComment(currentUser, existing)) {
+            throw new UnauthorizedException("You are not authorized to delete this comment");
+        }
+        
         commentRepository.delete(existing);
     }
 
@@ -99,7 +121,9 @@ public class CommentServiceImpl implements CommentService {
                 last);
     }
 
-
+    /**
+     * Map a Comment document to its response DTO representation.
+     */
     private CommentResponseDto mapToResponse(Comment comment) {
         // Fetch the username of the author. The author existence has been validated
         // on creation/update. If the user cannot be found (edge case), fall back
@@ -114,5 +138,35 @@ public class CommentServiceImpl implements CommentService {
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .build();
+    }
+
+    /**
+     * Get the currently authenticated user.
+     *
+     * @return the current user
+     */
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UnauthorizedException("You must be logged in to perform this action");
+        }
+        return (User) authentication.getPrincipal();
+    }
+
+    /**
+     * Check if the current user can modify a comment.
+     * Users can modify their own comments. Admins can modify any comment.
+     *
+     * @param user the current user
+     * @param comment the comment to check
+     * @return true if the user can modify the comment, false otherwise
+     */
+    private boolean canModifyComment(User user, Comment comment) {
+        // Admin can modify any comment
+        if (user.getRoles().contains(Role.ADMIN)) {
+            return true;
+        }
+        // User can modify their own comments
+        return user.getId().equals(comment.getAuthorId());
     }
 }

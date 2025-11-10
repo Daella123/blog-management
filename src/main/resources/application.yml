@@ -20,6 +20,14 @@ spring:
       uri: mongodb://localhost:27017/blogdb
       database: blogdb
 
+# JWT configuration
+jwt:
+  # Secret key for signing JWT tokens (should be at least 256 bits for HS256)
+  # In production, use a secure random key and store it as an environment variable
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  # Token expiration time in milliseconds (24 hours = 86400000 ms)
+  expiration-ms: 86400000
+
 # Swagger/OpenAPI configuration
 springdoc:
   swagger-ui:

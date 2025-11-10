@@ -8,18 +8,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Data transfer object used when registering a new user. Validation annotations
+ * ensure that the incoming request contains the required fields and that the
+ * email is properly formatted.
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserRegistrationRequest {
 
-    @Schema(description = "Unique username to identify the user", example = "daellaa")
+    @Schema(description = "Unique username to identify the user", example = "johndoe")
     @NotBlank(message = "Username is required")
     private String username;
 
-    @Schema(description = "User's email address", example = "daella@example.com")
+    @Schema(description = "User's email address", example = "john.doe@example.com")
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;

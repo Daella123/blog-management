@@ -8,14 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Generic response wrapper for paginated endpoints. This class holds the
- * paginated list of content as well as metadata about the total number of
- * elements and pages. Using a wrapper simplifies exposing pagination
- * information consistently across endpoints.
- *
- * @param <T> type of content being paginated
- */
+
 @Data
 @Builder
 @NoArgsConstructor
