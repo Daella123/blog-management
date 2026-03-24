@@ -34,12 +34,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    /**
-     * Authenticate a user and return a JWT token.
-     *
-     * @param loginRequest login credentials
-     * @return authentication response with JWT token and user details
-     */
+
     @Operation(summary = "Login to get JWT token", description = "Authenticate with username and password to receive a JWT token")
     @SecurityRequirements() // No security required for login endpoint
     @PostMapping("/login")

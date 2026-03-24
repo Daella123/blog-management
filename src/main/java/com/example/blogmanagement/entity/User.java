@@ -81,7 +81,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // UserDetails interface implementations
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
